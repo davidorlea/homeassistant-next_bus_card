@@ -229,6 +229,7 @@ class NextBusCard extends LitElement {
       .prediction .prediction__minutes {
         flex-shrink: 0;
         font-size: 28px;
+        line-height: normal;
         text-align: right;
         padding-left: 16px;
       }
