@@ -64,17 +64,20 @@ class NextBusCard extends LitElement {
     let { attributes: { predictions } } = this.hass.states[this.config.entity];
     predictions = predictions || [];
 
+    const include = Array.isArray(this.config.include) ? this.config.include : [];
+    const exclude = Array.isArray(this.config.exclude) ? this.config.exclude : [];
+
+    predictions = predictions.filter((prediction) => (
+      (!include.length || include.includes(prediction.line))
+      && (!exclude.length || !exclude.includes(prediction.line))
+    ));
+
+    const now = new Date();
+    const threshold = Number.isInteger(this.config.threshold) ? this.config.threshold : 1;
+
     predictions = predictions.filter((prediction) => {
-      if (!Array.isArray(this.config.include) || !this.config.include.length) {
-        return true;
-      }
-      return this.config.include.includes(prediction.line);
-    });
-    predictions = predictions.filter((prediction) => {
-      if (!Array.isArray(this.config.exclude) || !this.config.exclude.length) {
-        return true;
-      }
-      return !this.config.exclude.includes(prediction.line);
+      const departure = new Date(prediction.departure);
+      return Math.ceil((departure - now) / 1000 / 60) >= threshold;
     });
 
     return html`
@@ -101,7 +104,7 @@ class NextBusCard extends LitElement {
 
   _renderPredictions(predictions) {
     const now = new Date();
-    return predictions.slice(0, this.size).map((prediction) => {
+    return predictions.slice(0, this.getCardSize()).map((prediction) => {
       const departure = new Date(prediction.departure);
       return html`
         <div class="prediction">
@@ -126,11 +129,11 @@ class NextBusCard extends LitElement {
 
   async updated() {
     await new Promise((r) => setTimeout(r, 0));
-    this._setEqualWidth(this.root.querySelectorAll('.prediction__line'));
-    this._setEqualWidth(this.root.querySelectorAll('.prediction__minutes'));
+    NextBusCard.setEqualWidth(this.root.querySelectorAll('.prediction__line'));
+    NextBusCard.setEqualWidth(this.root.querySelectorAll('.prediction__minutes'));
   }
 
-  static _setEqualWidth(elements) {
+  static setEqualWidth(elements) {
     elements.forEach((element) => {
       element.style.width = 'auto';
     });
@@ -149,11 +152,10 @@ class NextBusCard extends LitElement {
       throw new Error('You need to define an entity');
     }
     this.config = config;
-    this.size = this.config.size || 5;
   }
 
   getCardSize() {
-    return this.size;
+    return Number.isInteger(this.config.size) ? this.config.size : 5;
   }
 
   get root() {
