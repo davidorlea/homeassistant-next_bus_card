@@ -2691,7 +2691,14 @@ class NextBusCard extends LitElement {
 
   static get styles() {
     return css`
-      card-header {
+      ha-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+      }
+      .card-header {
         display: flex;
         justify-content: space-between;
       }
@@ -2701,11 +2708,16 @@ class NextBusCard extends LitElement {
         text-overflow: ellipsis;
       }
       .prediction {
+        align-items: center;
         display: flex;
-        padding-bottom: 20px;
+        height: 40px;
+        margin: 8px 0;
+      }
+      .prediction:first-child {
+        margin-top: 0;
       }
       .prediction:last-child {
-        padding-bottom: 0;
+        margin-bottom: 0;
       }
       .prediction .prediction__line {
         flex-shrink: 0;
