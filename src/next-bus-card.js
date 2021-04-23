@@ -1,29 +1,30 @@
+import { STATE_NOT_RUNNING } from 'home-assistant-js-websocket';
 import {
   LitElement,
   css,
-  html
-} from "https://unpkg.com/lit-element@2.0.1/lit-element.js?module";
+  html,
+} from 'lit-element';
 
 class NextBusCard extends LitElement {
   static get properties() {
     return {
       hass: {},
-      config: {}
+      config: {},
     };
   }
 
-  connectedCallback(){
+  connectedCallback() {
     super.connectedCallback();
     this._startInterval();
   }
 
-  disconnectedCallback(){
+  disconnectedCallback() {
     super.disconnectedCallback();
     this._clearInterval();
   }
 
   _startInterval() {
-    var date = new Date();
+    const date = new Date();
     this._clearInterval();
     this._timeout = window.setTimeout(() => {
       this._interval = window.setInterval(() => this.requestUpdate(), 60000);
@@ -46,15 +47,15 @@ class NextBusCard extends LitElement {
     if (!this.hass.states[this.config.entity]) {
       return html`
         <hui-warning>
-          ${this.hass.config.state !== "NOT_RUNNING"
+          ${this.hass.config.state !== STATE_NOT_RUNNING
             ? this.hass.localize(
-                "ui.panel.lovelace.warning.entity_not_found",
-                "entity",
-                this.config.entity || "[empty]"
-              )
+              'ui.panel.lovelace.warning.entity_not_found',
+              'entity',
+              this.config.entity || '[empty]',
+            )
             : this.hass.localize(
-                "ui.panel.lovelace.warning.starting"
-              )
+              'ui.panel.lovelace.warning.starting',
+            )
           }
         </hui-warning>
       `;
@@ -63,13 +64,13 @@ class NextBusCard extends LitElement {
     let { attributes: { predictions } } = this.hass.states[this.config.entity];
     predictions = predictions || [];
 
-    predictions = predictions.filter(prediction => {
+    predictions = predictions.filter((prediction) => {
       if (!Array.isArray(this.config.include) || !this.config.include.length) {
         return true;
       }
       return this.config.include.includes(prediction.line);
     });
-    predictions = predictions.filter(prediction => {
+    predictions = predictions.filter((prediction) => {
       if (!Array.isArray(this.config.exclude) || !this.config.exclude.length) {
         return true;
       }
@@ -85,15 +86,13 @@ class NextBusCard extends LitElement {
                 ${this.config.title}
               </div>
             </h1>
-            `
-          : ""
+          `
+          : ''
         }
         <div class="card-content">
           ${predictions.length
             ? this._renderPredictions(predictions)
-            : html`
-              No departures to show
-            `
+            : html` No departures to show `
           }
         </div>
       </ha-card>
@@ -122,7 +121,7 @@ class NextBusCard extends LitElement {
           </div>
         </div>
       `;
-    })
+    });
   }
 
   async updated() {
@@ -131,17 +130,17 @@ class NextBusCard extends LitElement {
     this._setEqualWidth(this.root.querySelectorAll('.prediction__minutes'));
   }
 
-  _setEqualWidth(elements) {
-    elements.forEach(element => {
-      element.style.width = "auto";
+  static _setEqualWidth(elements) {
+    elements.forEach((element) => {
+      element.style.width = 'auto';
     });
 
-    const maxWidth = Math.max(...[].map.call(elements, element => {
-      return parseFloat(window.getComputedStyle(element).width);
-    }));
+    const maxWidth = Math.max(...[].map.call(
+      elements, (element) => parseFloat(window.getComputedStyle(element).width),
+    ));
 
-    elements.forEach(element => {
-      element.style.width = maxWidth + "px";
+    elements.forEach((element) => {
+      element.style.width = `${maxWidth}px`;
     });
   }
 
@@ -158,7 +157,7 @@ class NextBusCard extends LitElement {
   }
 
   get root() {
-    return this.shadowRoot || this
+    return this.shadowRoot || this;
   }
 
   static get styles() {
