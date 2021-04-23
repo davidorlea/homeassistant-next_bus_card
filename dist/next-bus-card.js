@@ -2600,7 +2600,7 @@ class NextBusCard extends LitElement {
 
     predictions = predictions.filter((prediction) => {
       const departure = new Date(prediction.departure);
-      return Math.ceil((departure - now) / 1000 / 60) >= threshold;
+      return NextBusCard.getDepartureTimeDifference(now, departure) >= threshold;
     });
 
     return html`
@@ -2642,12 +2642,16 @@ class NextBusCard extends LitElement {
             <span>(+ ${prediction.delay / 60})</span>
           </div>
           <div class="prediction__minutes">
-            ${Math.ceil((departure - now) / 1000 / 60)}
+            ${NextBusCard.getDepartureTimeDifference(now, departure)}
             <span>min</span>
           </div>
         </div>
       `;
     });
+  }
+
+  static getDepartureTimeDifference(now, departure) {
+    return Math.ceil((departure - now) / 1000 / 60);
   }
 
   async updated() {
