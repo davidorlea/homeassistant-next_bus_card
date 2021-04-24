@@ -6,7 +6,5 @@ export default {
     dir: 'dist',
     format: 'es',
   },
-  plugins: [
-    nodeResolve(),
-  ],
+  plugins: [nodeResolve()],
 };

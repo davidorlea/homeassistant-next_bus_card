@@ -2572,54 +2572,58 @@ class NextBusCard extends LitElement {
         <hui-warning>
           ${this.hass.config.state !== STATE_NOT_RUNNING
             ? this.hass.localize(
-              'ui.panel.lovelace.warning.entity_not_found',
-              'entity',
-              this.config.entity || '[empty]',
-            )
-            : this.hass.localize(
-              'ui.panel.lovelace.warning.starting',
-            )
-          }
+                'ui.panel.lovelace.warning.entity_not_found',
+                'entity',
+                this.config.entity || '[empty]'
+              )
+            : this.hass.localize('ui.panel.lovelace.warning.starting')}
         </hui-warning>
       `;
     }
 
-    let { attributes: { predictions } } = this.hass.states[this.config.entity];
+    let {
+      attributes: { predictions },
+    } = this.hass.states[this.config.entity];
     predictions = predictions || [];
 
-    const include = Array.isArray(this.config.include) ? this.config.include : [];
-    const exclude = Array.isArray(this.config.exclude) ? this.config.exclude : [];
+    const include = Array.isArray(this.config.include)
+      ? this.config.include
+      : [];
+    const exclude = Array.isArray(this.config.exclude)
+      ? this.config.exclude
+      : [];
 
-    predictions = predictions.filter((prediction) => (
-      (!include.length || include.includes(prediction.line))
-      && (!exclude.length || !exclude.includes(prediction.line))
-    ));
+    predictions = predictions.filter(
+      (prediction) =>
+        (!include.length || include.includes(prediction.line)) &&
+        (!exclude.length || !exclude.includes(prediction.line))
+    );
 
     const now = new Date();
-    const threshold = Number.isInteger(this.config.threshold) ? this.config.threshold : 1;
+    const threshold = Number.isInteger(this.config.threshold)
+      ? this.config.threshold
+      : 1;
 
     predictions = predictions.filter((prediction) => {
       const departure = new Date(prediction.departure);
-      return NextBusCard.getDepartureTimeDifference(now, departure) >= threshold;
+      return (
+        NextBusCard.getDepartureTimeDifference(now, departure) >= threshold
+      );
     });
 
     return html`
       <ha-card>
         ${this.config.title
           ? html`
-            <h1 class="card-header">
-              <div class="name">
-                ${this.config.title}
-              </div>
-            </h1>
-          `
-          : ''
-        }
+              <h1 class="card-header">
+                <div class="name">${this.config.title}</div>
+              </h1>
+            `
+          : ''}
         <div class="card-content">
           ${predictions.length
             ? this._renderPredictions(predictions)
-            : html` No departures to show `
-          }
+            : html` No departures to show `}
         </div>
       </ha-card>
     `;
@@ -2631,14 +2635,13 @@ class NextBusCard extends LitElement {
       const departure = new Date(prediction.departure);
       return html`
         <div class="prediction">
-          <div class="prediction__line">
-            ${prediction.line}
-          </div>
-          <div class="prediction__destination">
-            ${prediction.destination}
-          </div>
+          <div class="prediction__line">${prediction.line}</div>
+          <div class="prediction__destination">${prediction.destination}</div>
           <div class="prediction__time">
-            ${departure.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            ${departure.toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
             <span>(+ ${prediction.delay / 60})</span>
           </div>
           <div class="prediction__minutes">
@@ -2657,7 +2660,9 @@ class NextBusCard extends LitElement {
   async updated() {
     await new Promise((r) => setTimeout(r, 0));
     NextBusCard.setEqualWidth(this.root.querySelectorAll('.prediction__line'));
-    NextBusCard.setEqualWidth(this.root.querySelectorAll('.prediction__minutes'));
+    NextBusCard.setEqualWidth(
+      this.root.querySelectorAll('.prediction__minutes')
+    );
   }
 
   static setEqualWidth(elements) {
@@ -2665,9 +2670,11 @@ class NextBusCard extends LitElement {
       element.style.width = 'auto';
     });
 
-    const maxWidth = Math.max(...[].map.call(
-      elements, (element) => parseFloat(window.getComputedStyle(element).width),
-    ));
+    const maxWidth = Math.max(
+      ...[].map.call(elements, (element) =>
+        parseFloat(window.getComputedStyle(element).width)
+      )
+    );
 
     elements.forEach((element) => {
       element.style.width = `${maxWidth}px`;
@@ -2731,7 +2738,7 @@ class NextBusCard extends LitElement {
         text-overflow: ellipsis;
       }
       .prediction .prediction__time {
-        border-right: 1px solid #C4C4C4;
+        border-right: 1px solid #c4c4c4;
         color: var(--secondary-text-color);
         flex-shrink: 0;
         margin-left: auto;
