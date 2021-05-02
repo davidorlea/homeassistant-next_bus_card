@@ -18,5 +18,6 @@
   "dependencies": {
     "home-assistant-js-websocket": "^5.9.0",
     "lit-element": "^2.4.0"
-  }
+  },
+  "version": "0.1.0"
 }
