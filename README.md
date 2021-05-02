@@ -8,7 +8,16 @@ Custom [Home Assistant](https://www.home-assistant.io) Lovelace card to display 
 
 ### Requirements
 
-Make sure you have already setup the custom component [ASEAG Next Bus](https://github.com/davidorlea/homeassistant-aseag_next_bus) in your Home Assistant instance.
+Make sure you have already setup the custom component [ASEAG Next Bus](https://github.com/davidorlea/homeassistant-aseag_next_bus) in configuration mode `list` in your Home Assistant instance:
+
+```yaml
+sensor:
+  - platform: aseag_next_bus
+    name: aseag_next_bus
+    mode: list
+    stop_id: 12345
+    track: 'H.1'
+```
 
 ### Step 1
 
