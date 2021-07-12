@@ -25,12 +25,14 @@ Copy `dist/next-bus-card.js` from this repository to your local Home Assistant i
 
 ### Step 2
 
-Add a Lovelace resource reference in your `ui-lovelace.yaml`:
+Add a Lovelace resource reference in your `configuration.yaml` when Lovelace mode is YAML, otherwise manage resources in the Lovelace configuration UI panel:
 
 ```yaml
-resources:
-  - url: local/next-bus-card/next-bus-card.js
-    type: module
+lovelace:
+  mode: yaml
+  resources:
+    - url: local/next-bus-card/next-bus-card.js
+      type: module
 ```
 
 ### Step 3
